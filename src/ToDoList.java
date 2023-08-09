@@ -1,25 +1,41 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 public class ToDoList {
+
   private static final String FILE_PATH = "tasks.txt";
+
   public static void main(String[] args) {
     ArrayList<String> tasks = loadTasks();
+
     Scanner scanner = new Scanner(System.in);
+
     while (true) {
       System.out.println("Выберите действие:");
       System.out.println("1. Добавить задачу");
       System.out.println("2. Показать задачи");
       System.out.println("3. Отметить задачу как выполненную");
       System.out.println("4. Выход");
-      int choice = scanner.nextInt();
-      scanner.nextLine(); // Считываем символ новой строки после числа
+
+      int choice = -1;
+      try {
+        choice = Integer.parseInt(scanner.nextLine());
+      } catch (NumberFormatException e) {
+        System.out.println("Неверный ввод. Введите число.");
+        continue;
+      }
+
       switch (choice) {
         case 1:
           System.out.println("Введите задачу:");
           String task = scanner.nextLine();
-          tasks.add(task);
-          System.out.println("Задача добавлена.");
+          if (!task.isEmpty()) {
+            tasks.add(task);
+            System.out.println("Задача добавлена.");
+          } else {
+            System.out.println("Пустая задача не может быть добавлена.");
+          }
           break;
         case 2:
           showTasks(tasks);
@@ -27,7 +43,13 @@ public class ToDoList {
         case 3:
           showTasks(tasks);
           System.out.println("Введите номер задачи для отметки как выполненной:");
-          int completedTaskIndex = scanner.nextInt();
+          int completedTaskIndex = -1;
+          try {
+            completedTaskIndex = Integer.parseInt(scanner.nextLine());
+          } catch (NumberFormatException e) {
+            System.out.println("Неверный ввод. Введите число.");
+            continue;
+          }
           if (completedTaskIndex >= 1 && completedTaskIndex <= tasks.size()) {
             tasks.set(completedTaskIndex - 1, "[Выполнено] " + tasks.get(completedTaskIndex - 1));
             System.out.println("Задача отмечена как выполненная.");
@@ -45,6 +67,7 @@ public class ToDoList {
       }
     }
   }
+
   private static ArrayList<String> loadTasks() {
     ArrayList<String> tasks = new ArrayList<>();
     try {
@@ -59,6 +82,7 @@ public class ToDoList {
     }
     return tasks;
   }
+
   private static void saveTasks(ArrayList<String> tasks) {
     try {
       BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH));
