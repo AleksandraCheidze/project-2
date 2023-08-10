@@ -36,12 +36,18 @@ public class ToDoList {
   }
 
   private static void printMenu() {
-    System.out.println("Выберите действие:");
-    System.out.println("1. Добавить задачу");
-    System.out.println("2. Показать задачи");
-    System.out.println("3. Отметить задачу как выполненную");
-    System.out.println("4. Выход");
+    System.out.println("\u001B[33m╔════════════════════════════════════════════╗\u001B[0m");
+    System.out.println("\u001B[33m║\u001B[0m           \u001B[36mМенеджер задач ToDoList\u001B[0m          \u001B[33m║\u001B[0m");
+    System.out.println("\u001B[33m╠════════════════════════════════════════════╣\u001B[0m");
+    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m1. Добавить задачу\u001B[0m                       \u001B[33m║\u001B[0m");
+    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m2. Показать задачи\u001B[0m                       \u001B[33m║\u001B[0m");
+    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m3. Отметить задачу как выполненную\u001B[0m       \u001B[33m║\u001B[0m");
+    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m4. Выход\u001B[0m                                 \u001B[33m║\u001B[0m");
+    System.out.println("\u001B[33m╚════════════════════════════════════════════╝\u001B[0m");
   }
+
+
+
 
   private static int getUserChoice(Scanner scanner) {
     try {
@@ -103,6 +109,7 @@ public class ToDoList {
       e.printStackTrace();
     }
   }
+
   private static void showTasks(ArrayList<String> tasks) {
     if (tasks.isEmpty()) {
       System.out.println("Список задач пуст.");
