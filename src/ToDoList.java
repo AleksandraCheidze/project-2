@@ -25,6 +25,12 @@ public class ToDoList {
           markTaskAsCompleted(tasks, scanner);
           break;
         case 4:
+          showUncompletedTasks(tasks);
+          break;
+        case 5:
+          sortTasksByPriority(tasks);
+          break;
+        case 6:
           saveTasks(tasks);
           System.out.println("Выход.");
           scanner.close();
@@ -75,11 +81,41 @@ public class ToDoList {
     int completedTaskIndex = getUserChoice(scanner);
     if (completedTaskIndex >= 1 && completedTaskIndex <= tasks.size()) {
       tasks.set(completedTaskIndex - 1, "[Выполнено] " + tasks.get(completedTaskIndex - 1));
-      System.out.println("Задача отмечена как выполненная.");
+      System.out.printf("Задача номер %d отмечена как выполненная.%n", completedTaskIndex);
     } else {
       System.out.println("Неверный номер задачи.");
     }
   }
+  private static void showUncompletedTasks(ArrayList<String> tasks) {
+    System.out.println("Список невыполненных задач:");
+    for (int i = 0; i < tasks.size(); i++) {
+      String task = tasks.get(i);
+      if (!task.startsWith("[Выполнено]")) {
+        System.out.println((i + 1) + ". " + task);
+      }
+    }
+  }
+  private static void sortTasksByPriority(ArrayList<String> tasks) {
+    tasks.sort((task1, task2) -> {
+      boolean completed1 = task1.startsWith("[Выполнено]");
+      boolean completed2 = task2.startsWith("[Выполнено]");
+
+      if (completed1 && !completed2) {
+        return 1;
+      } else if (!completed1 && completed2) {
+        return -1;
+      }
+
+      int priority1 = Integer.parseInt(task1.replaceAll("\\D+", ""));
+      int priority2 = Integer.parseInt(task2.replaceAll("\\D+", ""));
+
+      return Integer.compare(priority1, priority2);
+    });
+
+    System.out.println("Задачи отсортированы по приоритету.");
+  }
+
+
 
 
   private static ArrayList<String> loadTasks() {
@@ -119,5 +155,7 @@ public class ToDoList {
         System.out.println((i + 1) + ". " + tasks.get(i));
       }
     }
-  }
-}
+    }
+      }
+
+
