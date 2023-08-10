@@ -115,9 +115,6 @@ public class ToDoList {
     System.out.println("Задачи отсортированы по приоритету.");
   }
 
-
-
-
   private static ArrayList<String> loadTasks() {
     ArrayList<String> tasks = new ArrayList<>();
     try {
