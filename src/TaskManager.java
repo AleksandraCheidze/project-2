@@ -19,31 +19,19 @@ public class TaskManager {
       int choice = getUserChoice();
 
       switch (choice) {
-        case 1:
-          addTask();
-          break;
-        case 2:
-          showTasks();
-          break;
-        case 3:
-          markTasksByPriority();
-          break;
-        case 4:
-          showTasksByPriority();
-          break;
-        case 5:
-          markTaskAsCompleted();
-          break;
-        case 6:
-          showUncompletedTasks();
-          break;
-        case 7:
+        case 1 -> addTask();
+        case 2 -> showTasks();
+        case 3 -> markTasksByPriority();
+        case 4 -> showTasksByPriority();
+        case 5 -> markTaskAsCompleted();
+        case 6 -> showUncompletedTasks();
+        case 7 -> {
           saveTasks();
           System.out.println("Выход.");
           scanner.close();
           return;
-        default:
-          System.out.println("Неверный выбор.");
+        }
+        default -> System.out.println("Неверный выбор.");
       }
     }
   }
