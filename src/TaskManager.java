@@ -77,14 +77,19 @@ public class TaskManager {
   }
 
   private void addTask() {
-    System.out.println("Введите задачу:");
-    String taskDescription = scanner.nextLine();
-    if (!taskDescription.isEmpty()) {
+    System.out.println("Введите задачи (для завершения ввода введите пустую строку):");
+
+    while (true) {
+      String taskDescription = scanner.nextLine();
+
+      if (taskDescription.isEmpty()) {
+        System.out.println("Добавление задач завершено.");
+        break;
+      }
+
       Task task = new Task(taskDescription);
       tasks.add(task);
       System.out.println("Задача добавлена.");
-    } else {
-      System.err.println("Пустая задача не может быть добавлена.");
     }
   }
 
