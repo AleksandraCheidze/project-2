@@ -39,11 +39,11 @@ public class Task {
   public String toString() {
     String priorityLabel;
     if (priority == 1) {
-      priorityLabel = "Не важно";
+      priorityLabel = "\u001B[33mНе важно\u001B[0m ";
     } else if (priority == 2) {
-      priorityLabel = "Важно";
+      priorityLabel = "\u001B[32mВажно\u001B[0m ";
     } else if (priority == 3) {
-      priorityLabel = "Повышенная важность";
+      priorityLabel = "\u001B[31mПовышенная важность\u001B[0m ";
     } else {
       priorityLabel = "Нет приоритета";
     }

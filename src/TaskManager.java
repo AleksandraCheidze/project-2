@@ -33,7 +33,7 @@ public class TaskManager {
           scanner.close();
           return;
         }
-        default -> System.out.println("Неверный выбор.");
+        default -> System.err.println("Неверный выбор.");
       }
     }
   }
@@ -47,7 +47,7 @@ public class TaskManager {
       Task removedTask = tasks.remove(taskIndex);
       System.out.println("Задача удалена: " + removedTask.getDescription());
     } else {
-      System.out.println("Неверный номер задачи.");
+      System.err.println("Неверный номер задачи.");
     }
   }
 
@@ -71,7 +71,7 @@ public class TaskManager {
     try {
       return Integer.parseInt(scanner.nextLine());
     } catch (NumberFormatException e) {
-      System.out.println("Неверный ввод. Введите число.");
+      System.err.println("Неверный ввод. Введите число.");
       return -1;
     }
   }
@@ -84,7 +84,7 @@ public class TaskManager {
       tasks.add(task);
       System.out.println("Задача добавлена.");
     } else {
-      System.out.println("Пустая задача не может быть добавлена.");
+      System.err.println("Пустая задача не может быть добавлена.");
     }
   }
 
@@ -97,7 +97,7 @@ public class TaskManager {
       task.setCompleted(true);
       System.out.printf("Задача номер %d отмечена как выполненная.%n", completedTaskIndex);
     } else {
-      System.out.println("Неверный номер задачи.");
+      System.err.println("Неверный номер задачи.");
     }
   }
 
@@ -118,20 +118,22 @@ public class TaskManager {
     if (selectedTaskIndex >= 0 && selectedTaskIndex < tasks.size()) {
       Task task = tasks.get(selectedTaskIndex);
       if (!task.isCompleted()) {
-        System.out.println(
-            "Введите приоритет для задачи:\n1 - не важно\n2 - важно\n3 - повышенная важность");
+            System.out.println("Введите приоритет для задачи:\n" +
+                "1 - \u001B[33mне важно\u001B[0m\n" +
+                "2 - \u001B[32mважно\u001B[0m\n" +
+                "3 - \u001B[31mповышенная важность\u001B[0m");
         int priority = getUserChoice();
         if (priority >= 1 && priority <= 3) {
           task.setPriority(priority);
           System.out.println("Приоритет добавлен.");
         } else {
-          System.out.println("Неверный приоритет. Введите число от 1 до 3.");
+          System.err.println("Неверный приоритет. Введите число от 1 до 3.");
         }
       } else {
-        System.out.println("Невозможно задать приоритет для выполненной задачи.");
+        System.err.println("Невозможно задать приоритет для выполненной задачи.");
       }
     } else {
-      System.out.println("Неверный номер задачи.");
+      System.err.println("Неверный номер задачи.");
     }
   }
 
@@ -149,13 +151,13 @@ public class TaskManager {
       }
       System.out.println("Задачи сохранены.");
     } catch (IOException e) {
-      System.out.println("Произошла ошибка при сохранении задач: " + e.getMessage());
+      System.err.println("Произошла ошибка при сохранении задач: " + e.getMessage());
     }
   }
 
   private void showTasks() {
     if (tasks.isEmpty()) {
-      System.out.println("Список задач пуст.");
+      System.err.println("Список задач пуст.");
     } else {
       System.out.println("Список задач:");
       for (int i = 0; i < tasks.size(); i++) {
