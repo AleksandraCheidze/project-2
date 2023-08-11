@@ -6,7 +6,7 @@ public class Task {
   public Task(String description) {
     this.description = description;
     this.completed = false;
-    this.priority = 1; // По умолчанию - не важно
+    this.priority = 0;
   }
 
   public Task(String description, int priority) {
@@ -45,11 +45,11 @@ public class Task {
     } else if (priority == 3) {
       priorityLabel = "Повышенная важность";
     } else {
-      priorityLabel = "Неверный приоритет";
+      priorityLabel = "Нет приоритета";
     }
 
     String completedLabel = completed ? "Выполнено" : "Не выполнено";
 
-    return "[" + completedLabel + "] [Приоритет: " + priorityLabel + "] " + description;
+    return description + " " + "[" + completedLabel + "] [Приоритет: " + priorityLabel + "] " ;
   }
 }
