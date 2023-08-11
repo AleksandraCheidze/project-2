@@ -116,11 +116,11 @@ public class TaskManager {
       if (!task.isCompleted()) {
         System.out.println("Введите приоритет для задачи: 1 - не важно, 2 - важно, 3 - повышенная важность");
         int priority = getUserChoice();
-        if (priority >= 1 && priority <= 10) {
+        if (priority >= 1 && priority <= 3) {
           task.setPriority(priority);
           System.out.println("Приоритет добавлен.");
         } else {
-          System.out.println("Неверный приоритет. Введите число от 1 до 10.");
+          System.out.println("Неверный приоритет. Введите число от 1 до 3.");
         }
       } else {
         System.out.println("Невозможно задать приоритет для выполненной задачи.");
