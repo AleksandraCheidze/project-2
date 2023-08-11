@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Scanner;
 
 public class TaskManager {
+
   private static final String FILE_PATH = "tasks.txt";
   private ArrayList<Task> tasks;
   private Scanner scanner;
@@ -25,7 +26,8 @@ public class TaskManager {
         case 4 -> showTasksByPriority();
         case 5 -> markTaskAsCompleted();
         case 6 -> showUncompletedTasks();
-        case 7 -> {
+        case 7 -> deleteTask();
+        case 8 -> {
           saveTasks();
           System.out.println("Выход.");
           scanner.close();
@@ -33,6 +35,19 @@ public class TaskManager {
         }
         default -> System.out.println("Неверный выбор.");
       }
+    }
+  }
+
+  private void deleteTask() {
+    showTasks();
+    System.out.println("Введите номер задачи для удаления:");
+    int taskIndex = getUserChoice() - 1;
+
+    if (taskIndex >= 0 && taskIndex < tasks.size()) {
+      Task removedTask = tasks.remove(taskIndex);
+      System.out.println("Задача удалена: " + removedTask.getDescription());
+    } else {
+      System.out.println("Неверный номер задачи.");
     }
   }
 
@@ -46,7 +61,8 @@ public class TaskManager {
     System.out.println("\u001B[33m║\u001B[0m   \u001B[35m4. Показать задачи по приоритету\u001B[0m       \u001B[33m  ║\u001B[0m");
     System.out.println("\u001B[33m║\u001B[0m   \u001B[35m5. Отметить задачу как выполненную\u001B[0m       \u001B[33m║\u001B[0m");
     System.out.println("\u001B[33m║\u001B[0m   \u001B[35m6. Показать только невыполненные задачи\u001B[0m  \u001B[33m║\u001B[0m");
-    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m7. Сохранить и выйти\u001B[0m                  \u001B[33m   ║\u001B[0m");
+    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m7. Удалить задачу\u001B[0m  \u001B[33m                      ║\u001B[0m");
+    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m8. Сохранить и выйти\u001B[0m                  \u001B[33m   ║\u001B[0m");
     System.out.println("\u001B[33m╚════════════════════════════════════════════╝\u001B[0m");
   }
 
@@ -102,7 +118,8 @@ public class TaskManager {
     if (selectedTaskIndex >= 0 && selectedTaskIndex < tasks.size()) {
       Task task = tasks.get(selectedTaskIndex);
       if (!task.isCompleted()) {
-        System.out.println("Введите приоритет для задачи: 1 - не важно, 2 - важно, 3 - повышенная важность");
+        System.out.println(
+            "Введите приоритет для задачи:\n1 - не важно\n2 - важно\n3 - повышенная важность");
         int priority = getUserChoice();
         if (priority >= 1 && priority <= 3) {
           task.setPriority(priority);
@@ -118,7 +135,6 @@ public class TaskManager {
     }
   }
 
-
   private void showTasksByPriority() {
     Collections.sort(tasks, new PriorityComparator());
     System.out.println("Задачи отсортированы по приоритету:");
@@ -128,14 +144,14 @@ public class TaskManager {
   private void saveTasks() {
     try (FileWriter writer = new FileWriter(FILE_PATH)) {
       for (Task task : tasks) {
-        writer.write(task.getDescription() + "|" + task.isCompleted() + "|" + task.getPriority() + "\n");
+        writer.write(
+            task.getDescription() + "|" + task.isCompleted() + "|" + task.getPriority() + "\n");
       }
       System.out.println("Задачи сохранены.");
     } catch (IOException e) {
       System.out.println("Произошла ошибка при сохранении задач: " + e.getMessage());
     }
   }
-
 
   private void showTasks() {
     if (tasks.isEmpty()) {
