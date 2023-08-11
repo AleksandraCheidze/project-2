@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class ToDoList {
+public class TaskManager {
 
   private static final String FILE_PATH = "tasks.txt";
 
@@ -43,14 +43,14 @@ public class ToDoList {
 
   private static void printMenu() {
     System.out.println("\u001B[33m╔════════════════════════════════════════════╗\u001B[0m");
-    System.out.println("\u001B[33m║\u001B[0m           \u001B[36mМенеджер задач ToDoList\u001B[0m          \u001B[33m║\u001B[0m");
+    System.out.println("\u001B[33m║\u001B[0m           \u001B[36mМенеджер задач TaskManager\u001B[0m          \u001B[33m║\u001B[0m");
     System.out.println("\u001B[33m╠════════════════════════════════════════════╣\u001B[0m");
     System.out.println("\u001B[33m║\u001B[0m   \u001B[35m1. Добавить задачу\u001B[0m                       \u001B[33m║\u001B[0m");
     System.out.println("\u001B[33m║\u001B[0m   \u001B[35m2. Показать задачи\u001B[0m                       \u001B[33m║\u001B[0m");
     System.out.println("\u001B[33m║\u001B[0m   \u001B[35m3. Отметить задачу как выполненную\u001B[0m       \u001B[33m║\u001B[0m");
     System.out.println("\u001B[33m║\u001B[0m   \u001B[35m4. Показать только невыполненные задачи\u001B[0m  \u001B[33m║\u001B[0m");
-    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m5. Сортировать задачи по приоритету\u001B[0m    \u001B[33m║\u001B[0m");
-    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m6. Сохранить и выйти\u001B[0m                  \u001B[33m║\u001B[0m");
+    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m5. Сортировать задачи по приоритету\u001B[0m      \u001B[33m║\u001B[0m");
+    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m6. Сохранить и выйти\u001B[0m                     \u001B[33m║\u001B[0m");
     System.out.println("\u001B[33m╚════════════════════════════════════════════╝\u001B[0m");
   }
 
