@@ -93,7 +93,8 @@ public class TaskManager {
 
   private void addTask() {
     System.out.println("Введите задачу:");
-    String taskDescription = scanner.nextLine();
+    String taskDescription = scanner.nextLine().trim(); // Удаляем лишние пробелы в начале и конце строки
+
     if (!taskDescription.isEmpty()) {
       Task task = new Task(taskDescription);
 
