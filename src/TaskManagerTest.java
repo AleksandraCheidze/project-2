@@ -13,7 +13,7 @@ public class TaskManagerTest {
     TaskManager taskManager = new TaskManager();
     Task task1 = new Task("Task 1");
     Task task2 = new Task("Task 2");
-    taskManager().add(task1);
+    taskManager.getTasks().add(task1);
     taskManager.getTasks().add(task2);
     String input = "1\n";
     Scanner scanner = new Scanner(input);
