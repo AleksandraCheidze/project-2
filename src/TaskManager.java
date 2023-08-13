@@ -82,7 +82,7 @@ public class TaskManager {
     System.out.println("\u001B[33m╚════════════════════════════════════════════╝\u001B[0m");
   }
 
-  private int getUserChoice() {
+  int getUserChoice() {
     try {
       return Integer.parseInt(scanner.nextLine());
     } catch (NumberFormatException e) {
