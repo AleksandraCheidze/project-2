@@ -62,24 +62,24 @@ public class TaskManager {
         "\u001B[33m║\u001B[0m           \u001B[36mМенеджер задач ToDoList\u001B[0m          \u001B[33m║\u001B[0m");
     System.out.println("\u001B[33m╠════════════════════════════════════════════╣\u001B[0m");
     System.out.println(
-        "\u001B[33m║\u001B[0m   \u001B[35m1. Добавить задачу\u001B[0m                       \u001B[33m                   ║\u001B[0m");
+        "\u001B[33m║\u001B[0m   \u001B[35m1. Добавить задачу\u001B[0m                       \u001B[33m║\u001B[0m");
     System.out.println(
-        "\u001B[33m║\u001B[0m   \u001B[35m2. Показать задачи\u001B[0m                       \u001B[33m                   ║\u001B[0m");
+        "\u001B[33m║\u001B[0m   \u001B[35m2. Показать задачи\u001B[0m                       \u001B[33m║\u001B[0m");
     System.out.println(
-        "\u001B[33m║\u001B[0m   \u001B[35m3. Отметить задачи по приоритету\u001B[0m       \u001B[33m                     ║\u001B[0m");
+        "\u001B[33m║\u001B[0m   \u001B[35m3. Отметить задачи по приоритету\u001B[0m       \u001B[33m  ║\u001B[0m");
     System.out.println(
-        "\u001B[33m║\u001B[0m   \u001B[35m4. Показать задачи по приоритету\u001B[0m       \u001B[33m                     ║\u001B[0m");
+        "\u001B[33m║\u001B[0m   \u001B[35m4. Показать задачи по приоритету\u001B[0m       \u001B[33m  ║\u001B[0m");
     System.out.println(
-        "\u001B[33m║\u001B[0m   \u001B[35m5. Отметить задачу как выполненную\u001B[0m       \u001B[33m                   ║\u001B[0m");
+        "\u001B[33m║\u001B[0m   \u001B[35m5. Отметить задачу как выполненную\u001B[0m       \u001B[33m║\u001B[0m");
     System.out.println(
-        "\u001B[33m║\u001B[0m   \u001B[35m6. Показать только невыполненные задачи\u001B[0m  \u001B[33m                   ║\u001B[0m");
+        "\u001B[33m║\u001B[0m   \u001B[35m6. Показать только невыполненные задачи\u001B[0m  \u001B[33m║\u001B[0m");
     System.out.println(
-        "\u001B[33m║\u001B[0m   \u001B[35m7. Удалить задачу\u001B[0m                      \u001B[33m                     ║\u001B[0m");
+        "\u001B[33m║\u001B[0m   \u001B[35m7. Удалить задачу\u001B[0m                      \u001B[33m║\u001B[0m");
     System.out.println(
         "\u001B[33m║\u001B[0m   \u001B[35m8. Сортировать задачи по дате 'до которой надо выполнить'\u001B[0m   \u001B[33m║\u001B[0m");
     System.out.println(
-        "\u001B[33m║\u001B[0m   \u001B[35m9. Сохранить и выйти\u001B[0m                  \u001B[33m                      ║\u001B[0m");
-    System.out.println("\u001B[33m╚═════════════════════════════════════════════                                         ╝\u001B[0m");
+        "\u001B[33m║\u001B[0m   \u001B[35m9. Сохранить и выйти\u001B[0m                  \u001B[33m   ║\u001B[0m");
+    System.out.println("\u001B[33m╚════════════════════════════════════════════╝\u001B[0m");
   }
 
   private int getUserChoice() {
@@ -92,9 +92,9 @@ public class TaskManager {
   }
 
   private void addTask() {
-    System.out.println("Введите задачи (для завершения ввода введите Enter строку):");
-    String taskDescription;
-    while (!(taskDescription = scanner.nextLine()).isEmpty()) {
+    System.out.println("Введите задачу:");
+    String taskDescription = scanner.nextLine();
+    if (!taskDescription.isEmpty()) {
       Task task = new Task(taskDescription);
 
       System.out.println("Введите дату 'до которой надо выполнить' (формат: дд.мм.гггг):");
@@ -109,10 +109,11 @@ public class TaskManager {
       }
 
       tasks.add(task);
-      System.out.println("Задача добавлена. Продолжайте вводить задачи или введите Enter для завершения.");
+      System.out.println("Задача добавлена.");
+    } else {
+      System.out.println("Пустая задача не может быть добавлена.");
     }
   }
-
 
   private void markTaskAsCompleted() {
     showTasks();
@@ -172,12 +173,7 @@ public class TaskManager {
   private void showTasksByDueDate() {
     Collections.sort(tasks, Comparator.comparing(Task::getDueDate));
     System.out.println("Задачи отсортированы по дате 'до которой надо выполнить':");
-    for (int i = 0; i < tasks.size(); i++) {
-      Task task = tasks.get(i);
-      SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-      String dueDateString = dateFormat.format(task.getDueDate());
-      System.out.println((i + 1) + ". " + task + " (до " + dueDateString + ")");
-    }
+    showTasks();
   }
 
   private void saveTasks() {
