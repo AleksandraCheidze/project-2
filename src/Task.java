@@ -1,7 +1,9 @@
+import java.util.Date;
 public class Task {
   private String description;
   private boolean completed;
   private int priority;
+  private Date dueDate;
 
   public Task(String description) {
     this.description = description;
@@ -33,6 +35,13 @@ public class Task {
 
   public void setPriority(int priority) {
     this.priority = priority;
+  }
+  public Date getDueDate() {
+    return dueDate;
+  }
+
+  public void setDueDate(Date dueDate) {
+    this.dueDate = dueDate;
   }
 
   @Override
