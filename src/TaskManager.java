@@ -1,7 +1,10 @@
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.Date;
 
 public class TaskManager {
 
@@ -77,21 +80,29 @@ public class TaskManager {
   }
 
   private void addTask() {
-    System.out.println("Введите задачи (для завершения ввода введите пустую строку):");
+    System.out.println("Введите задачу:");
+    String taskDescription = scanner.nextLine();
+    if (!taskDescription.isEmpty()) {
+      Task task = new Task(taskDescription);
 
-    while (true) {
-      String taskDescription = scanner.nextLine();
-
-      if (taskDescription.isEmpty()) {
-        System.out.println("Добавление задач завершено.");
-        break;
+      System.out.println("Введите дату 'до которой надо выполнить' (формат: дд.мм.гггг):");
+      String dateString = scanner.nextLine();
+      SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+      try {
+        Date dueDate = dateFormat.parse(dateString);
+        task.setDueDate(dueDate);
+      } catch (ParseException e) {
+        System.out.println("Неверный формат даты.");
+        return;
       }
 
-      Task task = new Task(taskDescription);
       tasks.add(task);
       System.out.println("Задача добавлена.");
+    } else {
+      System.out.println("Пустая задача не может быть добавлена.");
     }
   }
+
 
   private void markTaskAsCompleted() {
     showTasks();
