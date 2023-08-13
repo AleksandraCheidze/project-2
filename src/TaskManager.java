@@ -66,7 +66,7 @@ public class TaskManager {
     System.out.println(
         "\u001B[33m║\u001B[0m   \u001B[35m2. Показать задачи\u001B[0m                       \u001B[33m║\u001B[0m");
     System.out.println(
-        "\u001B[33m║\u001B[0m   \u001B[35m3. Задать приоритет\u001B[0m                    \u001B[33m  ║\u001B[0m");
+        "\u001B[33m║\u001B[0m   \u001B[35m3. Отметить задачи по приоритету\u001B[0m       \u001B[33m  ║\u001B[0m");
     System.out.println(
         "\u001B[33m║\u001B[0m   \u001B[35m4. Показать задачи по приоритету\u001B[0m       \u001B[33m  ║\u001B[0m");
     System.out.println(
@@ -74,9 +74,9 @@ public class TaskManager {
     System.out.println(
         "\u001B[33m║\u001B[0m   \u001B[35m6. Показать только невыполненные задачи\u001B[0m  \u001B[33m║\u001B[0m");
     System.out.println(
-        "\u001B[33m║\u001B[0m   \u001B[35m7. Удалить задачу\u001B[0m                        \u001B[33m║\u001B[0m");
+        "\u001B[33m║\u001B[0m   \u001B[35m7. Удалить задачу\u001B[0m                      \u001B[33m  ║\u001B[0m");
     System.out.println(
-        "\u001B[33m║\u001B[0m   \u001B[35m8. Сортировать по дате 'dead line'\u001B[0m       \u001B[33m║\u001B[0m");
+        "\u001B[33m║\u001B[0m   \u001B[35m8. Сортировать задачи по дате       \u001B[0m   \u001B[33m  ║\u001B[0m");
     System.out.println(
         "\u001B[33m║\u001B[0m   \u001B[35m9. Сохранить и выйти\u001B[0m                  \u001B[33m   ║\u001B[0m");
     System.out.println("\u001B[33m╚════════════════════════════════════════════╝\u001B[0m");
@@ -93,8 +93,7 @@ public class TaskManager {
 
   private void addTask() {
     System.out.println("Введите задачу:");
-    String taskDescription = scanner.nextLine().trim(); // Удаляем лишние пробелы в начале и конце строки
-
+    String taskDescription = scanner.nextLine();
     if (!taskDescription.isEmpty()) {
       Task task = new Task(taskDescription);
 
@@ -174,32 +173,20 @@ public class TaskManager {
   private void showTasksByDueDate() {
     Collections.sort(tasks, Comparator.comparing(Task::getDueDate));
     System.out.println("Задачи отсортированы по дате 'до которой надо выполнить':");
-    showTasksWithDueDate(); // Используйте новый метод для вывода задач с датами
-  }
-
-  private void showTasksWithDueDate() {
-    if (tasks.isEmpty()) {
-      System.err.println("Список задач пуст.");
-    } else {
-      System.out.println("Список задач:");
-      for (int i = 0; i < tasks.size(); i++) {
-        Task task = tasks.get(i);
-        System.out.println((i + 1) + ". " + task + " [До: " + formatDate(task.getDueDate()) + "]");
-      }
+    for (int i = 0; i < tasks.size(); i++) {
+      Task task = tasks.get(i);
+      SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+      String dueDateString = dateFormat.format(task.getDueDate());
+      System.out.println((i + 1) + ". " + task + " (до " + dueDateString + ")");
     }
   }
-
-  private String formatDate(Date date) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-    return dateFormat.format(date);
-  }
-
 
   private void saveTasks() {
     try (FileWriter writer = new FileWriter(FILE_PATH)) {
       for (Task task : tasks) {
         writer.write(
-            task.getDescription() + "|" + task.isCompleted() + "|" + task.getPriority() + "\n");
+            task.getDescription() + "|" + task.isCompleted() + "|" + task.getPriority() + "|"
+                + formatDate(task.getDueDate()) + "\n");
       }
       System.out.println("Задачи сохранены.");
     } catch (IOException e) {
@@ -213,8 +200,18 @@ public class TaskManager {
     } else {
       System.out.println("Список задач:");
       for (int i = 0; i < tasks.size(); i++) {
-        System.out.println((i + 1) + ". " + tasks.get(i));
+        System.out.println(
+            (i + 1) + ". " + tasks.get(i) + " [Дедлайн: " + formatDate(tasks.get(i).getDueDate())
+                + "]");
       }
+    }
+  }
+
+  private String formatDate(Date date) {
+    if (date != null) {
+      return new SimpleDateFormat("dd.MM.yyyy").format(date);
+    } else {
+      return "Нет даты";
     }
   }
 }
