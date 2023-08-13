@@ -74,9 +74,9 @@ public class TaskManager {
     System.out.println(
         "\u001B[33m║\u001B[0m   \u001B[35m6. Показать только невыполненные задачи\u001B[0m  \u001B[33m║\u001B[0m");
     System.out.println(
-        "\u001B[33m║\u001B[0m   \u001B[35m7. Удалить задачу\u001B[0m                      \u001B[33m║\u001B[0m");
+        "\u001B[33m║\u001B[0m   \u001B[35m7. Удалить задачу\u001B[0m                        \u001B[33m║\u001B[0m");
     System.out.println(
-        "\u001B[33m║\u001B[0m   \u001B[35m8. Сортировать задачи по дате 'до которой надо выполнить'\u001B[0m   \u001B[33m║\u001B[0m");
+        "\u001B[33m║\u001B[0m   \u001B[35m8. Сортировать по дате 'dead line'\u001B[0m       \u001B[33m║\u001B[0m");
     System.out.println(
         "\u001B[33m║\u001B[0m   \u001B[35m9. Сохранить и выйти\u001B[0m                  \u001B[33m   ║\u001B[0m");
     System.out.println("\u001B[33m╚════════════════════════════════════════════╝\u001B[0m");
