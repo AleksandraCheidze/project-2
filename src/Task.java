@@ -4,6 +4,7 @@ public class Task {
   private boolean completed;
   private int priority;
   private Date dueDate;
+  private Date dueDate;
 
   public Task(String description) {
     this.description = description;
