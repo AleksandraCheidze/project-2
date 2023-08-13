@@ -3,8 +3,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.Scanner;
 
 public class TaskManager {
 
@@ -30,7 +31,8 @@ public class TaskManager {
         case 5 -> markTaskAsCompleted();
         case 6 -> showUncompletedTasks();
         case 7 -> deleteTask();
-        case 8 -> {
+        case 8 -> showTasksByDueDate();
+        case 9 -> {
           saveTasks();
           System.out.println("Выход.");
           scanner.close();
@@ -56,19 +58,29 @@ public class TaskManager {
 
   private void printMenu() {
     System.out.println("\u001B[33m╔════════════════════════════════════════════╗\u001B[0m");
-    System.out.println("\u001B[33m║\u001B[0m           \u001B[36mМенеджер задач ToDoList\u001B[0m          \u001B[33m║\u001B[0m");
+    System.out.println(
+        "\u001B[33m║\u001B[0m           \u001B[36mМенеджер задач ToDoList\u001B[0m          \u001B[33m║\u001B[0m");
     System.out.println("\u001B[33m╠════════════════════════════════════════════╣\u001B[0m");
-    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m1. Добавить задачу\u001B[0m                       \u001B[33m║\u001B[0m");
-    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m2. Показать задачи\u001B[0m                       \u001B[33m║\u001B[0m");
-    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m3. Отметить задачи по приоритету\u001B[0m       \u001B[33m  ║\u001B[0m");
-    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m4. Показать задачи по приоритету\u001B[0m       \u001B[33m  ║\u001B[0m");
-    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m5. Отметить задачу как выполненную\u001B[0m       \u001B[33m║\u001B[0m");
-    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m6. Показать только невыполненные задачи\u001B[0m  \u001B[33m║\u001B[0m");
-    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m7. Удалить задачу\u001B[0m  \u001B[33m                      ║\u001B[0m");
-    System.out.println("\u001B[33m║\u001B[0m   \u001B[35m8. Сохранить и выйти\u001B[0m                  \u001B[33m   ║\u001B[0m");
+    System.out.println(
+        "\u001B[33m║\u001B[0m   \u001B[35m1. Добавить задачу\u001B[0m                       \u001B[33m║\u001B[0m");
+    System.out.println(
+        "\u001B[33m║\u001B[0m   \u001B[35m2. Показать задачи\u001B[0m                       \u001B[33m║\u001B[0m");
+    System.out.println(
+        "\u001B[33m║\u001B[0m   \u001B[35m3. Отметить задачи по приоритету\u001B[0m       \u001B[33m  ║\u001B[0m");
+    System.out.println(
+        "\u001B[33m║\u001B[0m   \u001B[35m4. Показать задачи по приоритету\u001B[0m       \u001B[33m  ║\u001B[0m");
+    System.out.println(
+        "\u001B[33m║\u001B[0m   \u001B[35m5. Отметить задачу как выполненную\u001B[0m       \u001B[33m║\u001B[0m");
+    System.out.println(
+        "\u001B[33m║\u001B[0m   \u001B[35m6. Показать только невыполненные задачи\u001B[0m  \u001B[33m║\u001B[0m");
+    System.out.println(
+        "\u001B[33m║\u001B[0m   \u001B[35m7. Удалить задачу\u001B[0m                      \u001B[33m║\u001B[0m");
+    System.out.println(
+        "\u001B[33m║\u001B[0m   \u001B[35m8. Сортировать задачи по дате 'до которой надо выполнить'\u001B[0m   \u001B[33m║\u001B[0m");
+    System.out.println(
+        "\u001B[33m║\u001B[0m   \u001B[35m9. Сохранить и выйти\u001B[0m                  \u001B[33m   ║\u001B[0m");
     System.out.println("\u001B[33m╚════════════════════════════════════════════╝\u001B[0m");
   }
-
 
   private int getUserChoice() {
     try {
@@ -103,7 +115,6 @@ public class TaskManager {
     }
   }
 
-
   private void markTaskAsCompleted() {
     showTasks();
     System.out.println("Введите номер задачи для отметки как выполненной:");
@@ -134,10 +145,10 @@ public class TaskManager {
     if (selectedTaskIndex >= 0 && selectedTaskIndex < tasks.size()) {
       Task task = tasks.get(selectedTaskIndex);
       if (!task.isCompleted()) {
-            System.out.println("Введите приоритет для задачи:\n" +
-                "1 - \u001B[33mне важно\u001B[0m\n" +
-                "2 - \u001B[32mважно\u001B[0m\n" +
-                "3 - \u001B[31mповышенная важность\u001B[0m");
+        System.out.println("Введите приоритет для задачи:\n" +
+            "1 - \u001B[33mне важно\u001B[0m\n" +
+            "2 - \u001B[32mважно\u001B[0m\n" +
+            "3 - \u001B[31mповышенная важность\u001B[0m");
         int priority = getUserChoice();
         if (priority >= 1 && priority <= 3) {
           task.setPriority(priority);
@@ -156,6 +167,12 @@ public class TaskManager {
   private void showTasksByPriority() {
     Collections.sort(tasks, new PriorityComparator());
     System.out.println("Задачи отсортированы по приоритету:");
+    showTasks();
+  }
+
+  private void showTasksByDueDate() {
+    Collections.sort(tasks, Comparator.comparing(Task::getDueDate));
+    System.out.println("Задачи отсортированы по дате 'до которой надо выполнить':");
     showTasks();
   }
 
