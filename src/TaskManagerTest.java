@@ -28,14 +28,14 @@ public class TaskManagerTest {
 
   @Test
   public void testGetUserChoiceValidInput() {
-    String input = "42\n"; // Ввод пользователя
+    String input = "42\n";
     InputStream in = new ByteArrayInputStream(input.getBytes());
-    System.setIn(in); // Перенаправляем System.in для ввода данных
+    System.setIn(in);
 
     TaskManager taskManager = new TaskManager();
     int choice = taskManager.getUserChoice();
 
-    assertEquals(42, choice); // Проверяем, что результат совпадает с ожидаемым значением
+    assertEquals(42, choice);
   }
 }
 
