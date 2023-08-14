@@ -21,6 +21,7 @@ public class PriorityComparator implements Comparator<Task> {
     if (!task1.isCompleted() && task2.isCompleted()) {
       return -1;
     }
-    return Integer.compare(priority1, priority2);
+    return Integer.compare(priority2, priority1);
   }
 }
+
