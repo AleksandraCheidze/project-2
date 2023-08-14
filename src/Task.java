@@ -12,12 +12,6 @@ public class Task {
     this.priority = 0;
   }
 
-  public Task(String description, int priority) {
-    this.description = description;
-    this.completed = false;
-    this.priority = priority;
-  }
-
   public String getDescription() {
     return description;
   }

@@ -38,7 +38,7 @@ public class TaskManager {
           scanner.close();
           return;
         }
-        default -> System.err.println("Неверный выбор.");
+
       }
     }
   }
