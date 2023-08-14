@@ -19,6 +19,7 @@ public class TaskManager {
   }
 
   public void start() {
+    loadTasks();
     while (true) {
       printMenu();
       int choice = getUserChoice();
@@ -163,6 +164,41 @@ public class TaskManager {
       System.err.println("Неверный номер задачи.");
     }
   }
+
+  void loadTasks() {
+    try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        String[] parts = line.split("\\|");
+        if (parts.length == 4) {
+          String description = parts[0];
+          boolean completed = Boolean.parseBoolean(parts[1]);
+          int priority = Integer.parseInt(parts[2]);
+          Date dueDate = parseDate(parts[3]);
+
+          Task task = new Task(description);
+          task.setCompleted(completed);
+          task.setPriority(priority);
+          task.setDueDate(dueDate);
+
+          tasks.add(task);
+        }
+      }
+      System.out.println("Задачи загружены.");
+    } catch (IOException e) {
+      System.err.println("Произошла ошибка при загрузке задач: " + e.getMessage());
+    }
+  }
+
+  Date parseDate(String dateString) {
+    try {
+      return new SimpleDateFormat("dd.MM.yyyy").parse(dateString);
+    } catch (ParseException e) {
+      return null;
+    }
+  }
+
+
 
   void showTasksByPriority() {
     Collections.sort(tasks, new PriorityComparator());
