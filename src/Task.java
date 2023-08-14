@@ -59,9 +59,8 @@ public class Task {
       priorityLabel = "Нет приоритета";
     }
 
-    String completedLabel = completed ? "\u001B[32mВыполнено\u001B[0m" : "\u001B[31mНе выполнено\u001B[0m";
+    String completedLabel = completed ? "\u001B[31mВыполнено\u001B[0m" : "\u001B[32mНе выполнено\u001B[0m";
 
     return description + " " + "[" + completedLabel + "] [Приоритет: " + priorityLabel + "] ";
   }
-
 }
