@@ -2,8 +2,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Scanner;
 
 import org.junit.jupiter.api.Test;
@@ -148,6 +150,19 @@ public class TaskManagerTest {
       System.setIn(originalSystemIn);
     }
   }
+
+  @Test
+  public void testToStringNoPriority() {
+    Task task4 = new Task("No Priority Task");
+    task4.setPriority(0);
+    task4.setCompleted(false);
+
+    String expectedOutput = "No Priority Task [\u001B[32mНе выполнено\u001B[0m] [Приоритет: Нет приоритета] ";
+    String actualOutput = task4.toString();
+
+    assertEquals(expectedOutput, actualOutput);
+  }
+
 }
 
 
