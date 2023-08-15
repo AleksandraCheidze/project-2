@@ -1,5 +1,3 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -7,6 +5,9 @@ import java.util.Calendar;
 import java.util.Scanner;
 
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class TaskManagerTest {
 
@@ -40,6 +41,7 @@ public class TaskManagerTest {
     assertEquals(42, choice);
   }
 
+  //addTask
   @Test
   public void testAddTaskValidInput() {
     String input = "Sample Task\n10.08.2023\n";
@@ -86,6 +88,43 @@ public class TaskManagerTest {
 
     assertEquals(0, taskManager.getTasks().size());
   }
+
+  //markTaskAsCompleted()
+  @Test
+  public void testMarkTaskAsCompletedValidInput() {
+    TaskManager taskManager = new TaskManager();
+    Task task1 = new Task("Task 1");
+    Task task2 = new Task("Task 2");
+    taskManager.getTasks().add(task1);
+    taskManager.getTasks().add(task2);
+
+    String input = "1\n";
+    InputStream in = new ByteArrayInputStream(input.getBytes());
+    System.setIn(in);
+
+    taskManager.setScanner(new Scanner(System.in));
+    taskManager.markTaskAsCompleted();
+
+    assertTrue(task1.isCompleted());
+    assertFalse(task2.isCompleted());
+  }
+
+  @Test
+  public void testMarkTaskAsCompletedInvalidInput() {
+    TaskManager taskManager = new TaskManager();
+    Task task1 = new Task("Task 1");
+    taskManager.getTasks().add(task1);
+
+    String input = "0\n";
+    InputStream in = new ByteArrayInputStream(input.getBytes());
+    System.setIn(in);
+
+    taskManager.setScanner(new Scanner(System.in));
+    taskManager.markTaskAsCompleted();
+
+    assertFalse(task1.isCompleted());
+  }
 }
+
 
 
