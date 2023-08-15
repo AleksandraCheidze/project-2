@@ -1,5 +1,7 @@
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Scanner;
@@ -124,7 +126,33 @@ public class TaskManagerTest {
 
     assertFalse(task1.isCompleted());
   }
+
+  @Test
+  public void testMarkTasksByPriority() {
+    TaskManager taskManager = new TaskManager();
+    Task task1 = new Task("Task 1");
+    taskManager.getTasks().add(task1);
+
+    String input = "1\n2\n";
+    InputStream originalSystemIn = System.in;
+
+    try {
+      System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+      taskManager.setScanner(new Scanner(System.in));
+
+      taskManager.markTasksByPriority();
+
+      assertEquals(2, task1.getPriority());
+    } finally {
+      System.setIn(originalSystemIn);
+    }
+  }
 }
+
+
+
+
 
 
 
