@@ -199,7 +199,6 @@ public class TaskManager {
   }
 
 
-
   void showTasksByPriority() {
     Collections.sort(tasks, new PriorityComparator());
     System.out.println("Задачи отсортированы по приоритету:");
@@ -265,6 +264,5 @@ public class TaskManager {
     } else {
       return "Нет даты";
     }
-
   }
-}
+  }

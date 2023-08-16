@@ -1,9 +1,10 @@
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -147,11 +148,51 @@ public class TaskManagerTest {
 
 
 
+  @Test
+  public void testAddTaskValidInputWithDifferentDateFormats() {
+    String input = "Sample Task\n10.08.2023\n";
+    InputStream in = new ByteArrayInputStream(input.getBytes());
+    System.setIn(in);
+
+    TaskManager taskManager = new TaskManager();
+    taskManager.setScanner(new Scanner(System.in));
+
+    taskManager.addTask();
+
+    assertEquals(1, taskManager.getTasks().size());
+    assertEquals("Sample Task", taskManager.getTasks().get(0).getDescription());
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    String dueDateString = dateFormat.format(taskManager.getTasks().get(0).getDueDate());
+    assertEquals("10.08.2023", dueDateString);
+  }
+
+  @Test
+  public void testShowTasksByDueDate() {
+    TaskManager taskManager = new TaskManager();
+    Task task1 = new Task("Task 1");
+    Task task2 = new Task("Task 2");
+
+    // Set different due dates for tasks
+    task1.setDueDate(new Date(System.currentTimeMillis() + 86400000)); // Tomorrow
+    task2.setDueDate(new Date(System.currentTimeMillis() + 172800000)); // Day after tomorrow
+
+    taskManager.getTasks().add(task1);
+    taskManager.getTasks().add(task2);
+
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+
+    taskManager.showTasksByDueDate();
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+    String expectedOutput = "Tasks sorted by due date:\n" +
+        "1. Task 1 - " + dateFormat.format(task1.getDueDate()) + "\n" +
+        "2. Task 2 - " + dateFormat.format(task2.getDueDate()) + "\n" +
+        "1. Task 1 [[32mНе выполнено[0m] [Приоритет: Нет приоритета]  (до " + dateFormat.format(task1.getDueDate()) + ")\n" +
+        "2. Task 2 [[32mНе выполнено[0m] [Приоритет: Нет приоритета]  (до " + dateFormat.format(task2.getDueDate()) + ")\n";
+
+    assertEquals(expectedOutput, outContent.toString());
+  }
 }
-
-
-
-
-
-
-
