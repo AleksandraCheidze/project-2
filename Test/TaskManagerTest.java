@@ -1,10 +1,15 @@
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -20,9 +25,6 @@ public class TaskManagerTest {
     String input = "1\n";
     Scanner scanner = new Scanner(input);
 
-    taskManager.setScanner(scanner);
-    taskManager.deleteTask();
-
     assertEquals(1, taskManager.getTasks().size());
     assertEquals("Task 2", taskManager.getTasks().get(0).getDescription());
   }
@@ -30,29 +32,21 @@ public class TaskManagerTest {
 
   @Test
   public void testGetUserChoiceValidInput() {
-    String input = "42\n";
-    InputStream in = new ByteArrayInputStream(input.getBytes());
-    System.setIn(in);
-
     TaskManager taskManager = new TaskManager();
+    String input = "42\n";
+    Scanner scanner = new Scanner(input);
+    taskManager.deleteTask(scanner);
     int choice = taskManager.getUserChoice();
-
     assertEquals(42, choice);
   }
 
-  //addTask
   @Test
   public void testAddTaskValidInput() {
-    String input = "Sample Task\n10.08.2023\n";
-    InputStream in = new ByteArrayInputStream(input.getBytes());
-    System.setIn(in);
-
     TaskManager taskManager = new TaskManager();
-    taskManager.setScanner(new Scanner(System.in));
-
-    taskManager.addTask();
-
-    assertEquals(1, taskManager.getTasks().size()); // Assuming 1 task is added
+    String input = "Sample Task\n10.08.2023\n";
+    Scanner scanner = new Scanner(input);
+    taskManager.addTask(scanner);
+    assertEquals(1, taskManager.getTasks().size());
     assertEquals("Sample Task", taskManager.getTasks().get(0).getDescription());
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
@@ -62,33 +56,22 @@ public class TaskManagerTest {
 
   @Test
   public void testAddTaskEmptyDescription() {
-    String input = "\n";
-    InputStream in = new ByteArrayInputStream(input.getBytes());
-    System.setIn(in);
-
     TaskManager taskManager = new TaskManager();
-    taskManager.setScanner(new Scanner(System.in));
-
-    taskManager.addTask();
-
+    String input = "\n";
+    Scanner scanner = new Scanner(input);
+    taskManager.addTask(scanner);
     assertEquals(0, taskManager.getTasks().size());
   }
 
   @Test
   public void testAddTaskInvalidDateFormat() {
-    String input = "Sample Task\ninvalid_date\n";
-    InputStream in = new ByteArrayInputStream(input.getBytes());
-    System.setIn(in);
-
     TaskManager taskManager = new TaskManager();
-    taskManager.setScanner(new Scanner(System.in));
-
-    taskManager.addTask();
-
+    String input = "Sample Task\ninvalid_date\n";
+    Scanner scanner = new Scanner(input);
+    taskManager.addTask(scanner);
     assertEquals(0, taskManager.getTasks().size());
   }
 
-  //markTaskAsCompleted()
   @Test
   public void testMarkTaskAsCompletedValidInput() {
     TaskManager taskManager = new TaskManager();
@@ -96,14 +79,9 @@ public class TaskManagerTest {
     Task task2 = new Task("Task 2");
     taskManager.getTasks().add(task1);
     taskManager.getTasks().add(task2);
-
     String input = "1\n";
-    InputStream in = new ByteArrayInputStream(input.getBytes());
-    System.setIn(in);
-
-    taskManager.setScanner(new Scanner(System.in));
-    taskManager.markTaskAsCompleted();
-
+    Scanner scanner = new Scanner(input);
+    taskManager.markTaskAsCompleted(scanner);
     assertTrue(task1.isCompleted());
     assertFalse(task2.isCompleted());
   }
@@ -113,14 +91,9 @@ public class TaskManagerTest {
     TaskManager taskManager = new TaskManager();
     Task task1 = new Task("Task 1");
     taskManager.getTasks().add(task1);
-
     String input = "0\n";
-    InputStream in = new ByteArrayInputStream(input.getBytes());
-    System.setIn(in);
-
-    taskManager.setScanner(new Scanner(System.in));
-    taskManager.markTaskAsCompleted();
-
+    Scanner scanner = new Scanner(input);
+    taskManager.markTaskAsCompleted(scanner);
     assertFalse(task1.isCompleted());
   }
 
@@ -128,71 +101,71 @@ public class TaskManagerTest {
   public void testMarkTasksByPriority() {
     TaskManager taskManager = new TaskManager();
     Task task1 = new Task("Task 1");
+    Scanner scanner = null;
     taskManager.getTasks().add(task1);
-
     String input = "1\n2\n";
-    InputStream originalSystemIn = System.in;
-
-    try {
-      System.setIn(new ByteArrayInputStream(input.getBytes()));
-
-      taskManager.setScanner(new Scanner(System.in));
-
-      taskManager.markTasksByPriority();
-
-      assertEquals(2, task1.getPriority());
-    } finally {
-      System.setIn(originalSystemIn);
-    }
+    scanner = new Scanner(input);
+    taskManager.markTasksByPriority(scanner);
+    assertEquals(2, task1.getPriority());
   }
-
-
-
   @Test
-  public void testAddTaskValidInputWithDifferentDateFormats() {
-    String input = "Sample Task\n10.08.2023\n";
-    InputStream in = new ByteArrayInputStream(input.getBytes());
-    System.setIn(in);
-
+  public void testLoadTasks() throws ParseException {
     TaskManager taskManager = new TaskManager();
-    taskManager.setScanner(new Scanner(System.in));
+    String input = "Sample Task|false|2|10.08.2023\n";
+    Scanner scanner = new Scanner(input);
+    ArrayList<Task> tasks = taskManager.getTasks();
+    assertEquals(1, tasks.size());
 
-    taskManager.addTask();
-
-    assertEquals(1, taskManager.getTasks().size());
-    assertEquals("Sample Task", taskManager.getTasks().get(0).getDescription());
+    Task loadedTask = tasks.get(0);
+    assertEquals("Sample Task", loadedTask.getDescription());
+    assertFalse(loadedTask.isCompleted());
+    assertEquals(2, loadedTask.getPriority());
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-    String dueDateString = dateFormat.format(taskManager.getTasks().get(0).getDueDate());
-    assertEquals("10.08.2023", dueDateString);
+    Date dueDate = dateFormat.parse("10.08.2023");
+    assertEquals(dueDate, loadedTask.getDueDate());
   }
 
   @Test
-  public void testShowTasksByDueDate() {
+  public void testSaveTasks() throws IOException {
     TaskManager taskManager = new TaskManager();
     Task task1 = new Task("Task 1");
+    task1.setCompleted(true);
+    task1.setPriority(2);
     Task task2 = new Task("Task 2");
-
-    // Set different due dates for tasks
-    task1.setDueDate(new Date(System.currentTimeMillis() + 86400000)); // Tomorrow
-    task2.setDueDate(new Date(System.currentTimeMillis() + 172800000)); // Day after tomorrow
-
+    task2.setPriority(1);
     taskManager.getTasks().add(task1);
     taskManager.getTasks().add(task2);
 
-    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(outContent));
 
-    taskManager.showTasksByDueDate();
+    File tempFile = File.createTempFile("testTasks", ".txt");
+    String filePath = tempFile.getAbsolutePath();
 
+    try (FileWriter writer = new FileWriter(tempFile)) {
+      taskManager.saveTasks(writer);
+    }
+
+
+    String savedContent = Files.readString(Path.of(filePath));
+
+    String expectedContent = "Task 1|true|2|Нет даты\n" +
+        "Task 2|false|1|Нет даты\n";
+
+    assertEquals(expectedContent, savedContent);
+  }
+  @Test
+  public void testFormatDateWithDate() throws ParseException {
+    TaskManager taskManager = new TaskManager();
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    Date dueDate = dateFormat.parse("10.08.2023");
+    String formattedDate = taskManager.formatDate(dueDate);
+    assertEquals("10.08.2023", formattedDate);
+  }
 
-    String expectedOutput = "Tasks sorted by due date:\n" +
-        "1. Task 1 - " + dateFormat.format(task1.getDueDate()) + "\n" +
-        "2. Task 2 - " + dateFormat.format(task2.getDueDate()) + "\n" +
-        "1. Task 1 [[32mНе выполнено[0m] [Приоритет: Нет приоритета]  (до " + dateFormat.format(task1.getDueDate()) + ")\n" +
-        "2. Task 2 [[32mНе выполнено[0m] [Приоритет: Нет приоритета]  (до " + dateFormat.format(task2.getDueDate()) + ")\n";
-
-    assertEquals(expectedOutput, outContent.toString());
+  @Test
+  public void testFormatDateWithNull() {
+    TaskManager taskManager = new TaskManager();
+    String formattedDate = taskManager.formatDate(null);
+    assertEquals("Нет даты", formattedDate);
   }
 }

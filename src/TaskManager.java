@@ -2,6 +2,8 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -9,11 +11,17 @@ public class TaskManager {
 
   private static final String FILE_PATH = "tasks.txt";
   private final ArrayList<Task> tasks;
-  private Scanner scanner;
+  private final Scanner scanner;
+  private FileWriter writer;
 
   public TaskManager() {
     tasks = new ArrayList<>();
-    scanner = new Scanner(System.in);
+    this.scanner = new Scanner(System.in);
+    try {
+      this.writer = new FileWriter(FILE_PATH);
+    } catch (Exception e) {
+      System.out.println("Произошла ошибка при выполнении операции: " + e.getMessage());
+    }
   }
 
   public void start() {
@@ -23,16 +31,16 @@ public class TaskManager {
       int choice = getUserChoice();
 
       switch (choice) {
-        case 1 -> addTask();
-        case 2 -> showTasks();
-        case 3 -> markTasksByPriority();
+        case 1 -> addTask(scanner);
+        case 2 -> showTasks(tasks);
+        case 3 -> markTasksByPriority(scanner);
         case 4 -> showTasksByPriority();
-        case 5 -> markTaskAsCompleted();
+        case 5 -> markTaskAsCompleted(scanner);
         case 6 -> showUncompletedTasks();
-        case 7 -> deleteTask();
-        case 8 -> DateSorter.showClosestDueDates(tasks);
+        case 7 -> deleteTask(scanner);
+        case 8 -> showTasksByDueDate();
         case 9 -> {
-          saveTasks();
+          saveTasks(writer);
           System.out.println("Выход.");
           scanner.close();
           return;
@@ -42,8 +50,8 @@ public class TaskManager {
     }
   }
 
-  void deleteTask() {
-    showTasks();
+  void deleteTask(Scanner scanner) {
+    showTasks(tasks);
     System.out.println("Введите номер задачи для удаления:");
     int taskIndex = getUserChoice() - 1;
 
@@ -90,37 +98,32 @@ public class TaskManager {
     }
   }
 
-  void addTask() {
-    while (true) {
-      System.out.println("Введите задачу:");
-      String taskDescription = scanner.nextLine();
+  void addTask(Scanner scanner) {
+    System.out.println("Введите задачу:");
+    String taskDescription = scanner.nextLine();
+    if (!taskDescription.isEmpty()) {
+      Task task = new Task(taskDescription);
 
-      if (!taskDescription.isEmpty()) {
-        Task task = new Task(taskDescription);
-
-        while (true) {
-          System.out.println("Введите дату 'до которой надо выполнить' (формат: дд.мм.гггг):");
-          String dateString = scanner.nextLine();
-          SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-
-          try {
-            Date dueDate = dateFormat.parse(dateString);
-            task.setDueDate(dueDate);
-            tasks.add(task);
-            System.out.println("Задача добавлена.");
-            return; // выходим из метода при успешном вводе даты
-          } catch (ParseException e) {
-            System.out.println("Неверный формат даты. Попробуйте снова.");
-          }
-        }
-      } else {
-        System.out.println("Пустая задача не может быть добавлена. Попробуйте снова.");
+      System.out.println("Введите дату 'до которой надо выполнить' (формат: дд.мм.гггг):");
+      String dateString = scanner.nextLine();
+      SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+      try {
+        Date dueDate = dateFormat.parse(dateString);
+        task.setDueDate(dueDate);
+      } catch (ParseException e) {
+        System.out.println("Неверный формат даты.");
+        return;
       }
+
+      tasks.add(task);
+      System.out.println("Задача добавлена.");
+    } else {
+      System.out.println("Пустая задача не может быть добавлена.");
     }
   }
 
-  void markTaskAsCompleted() {
-    showTasks();
+  void markTaskAsCompleted(Scanner scanner) {
+    showTasks(tasks);
     System.out.println("Введите номер задачи для отметки как выполненной:");
     int completedTaskIndex = getUserChoice();
     if (completedTaskIndex >= 1 && completedTaskIndex <= tasks.size()) {
@@ -142,18 +145,17 @@ public class TaskManager {
     }
   }
 
-  void markTasksByPriority() {
-    showTasks();
+  void markTasksByPriority(Scanner scanner) {
+    showTasks(tasks);
     System.out.println("Введите номер задачи для добавления приоритета:");
     int selectedTaskIndex = getUserChoice() - 1;
     if (selectedTaskIndex >= 0 && selectedTaskIndex < tasks.size()) {
       Task task = tasks.get(selectedTaskIndex);
       if (!task.isCompleted()) {
-        System.out.println("""
-            Введите приоритет для задачи:
-            1 - \u001B[33mне важно\u001B[0m
-            2 - \u001B[32mважно\u001B[0m
-            3 - \u001B[31mповышенная важность\u001B[0m""");
+        System.out.println("Введите приоритет для задачи:\n" +
+            "1 - \u001B[33mне важно\u001B[0m\n" +
+            "2 - \u001B[32mважно\u001B[0m\n" +
+            "3 - \u001B[31mповышенная важность\u001B[0m");
         int priority = getUserChoice();
         if (priority >= 1 && priority <= 3) {
           task.setPriority(priority);
@@ -203,14 +205,26 @@ public class TaskManager {
   }
 
 
+
   void showTasksByPriority() {
-    tasks.sort(new PriorityComparator());
+    Collections.sort(tasks, new PriorityComparator());
     System.out.println("Задачи отсортированы по приоритету:");
-    showTasks();
+    showTasks(tasks);
   }
 
-  void saveTasks() {
-    try (FileWriter writer = new FileWriter(FILE_PATH)) {
+  void showTasksByDueDate() {
+    Collections.sort(tasks, Comparator.comparing(Task::getDueDate));
+    System.out.println("Задачи отсортированы по дате 'до которой надо выполнить':");
+    for (int i = 0; i < tasks.size(); i++) {
+      Task task = tasks.get(i);
+      SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+      String dueDateString = dateFormat.format(task.getDueDate());
+      System.out.println((i + 1) + ". " + task + " (до " + dueDateString + ")");
+    }
+  }
+
+  void saveTasks(FileWriter writer) {
+    try  {
       for (Task task : tasks) {
         writer.write(
             task.getDescription() + "|" + task.isCompleted() + "|" + task.getPriority() + "|"
@@ -222,7 +236,7 @@ public class TaskManager {
     }
   }
 
-  void showTasks() {
+  void showTasks(ArrayList<Task> tasks) {
     if (tasks.isEmpty()) {
       System.err.println("Список задач пуст.");
     } else {
@@ -235,20 +249,15 @@ public class TaskManager {
     }
   }
 
-  public ArrayList<Task> getTasks() {
-    return tasks;
-  }
-
-
-  public void setScanner(Scanner scanner) {
-    this.scanner = scanner;
-  }
-
   String formatDate(Date date) {
     if (date != null) {
       return new SimpleDateFormat("dd.MM.yyyy").format(date);
     } else {
       return "Нет даты";
     }
+  }
+
+  public ArrayList<Task> getTasks() {
+    return tasks;
   }
 }
