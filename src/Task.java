@@ -1,6 +1,6 @@
 import java.util.Date;
 public class Task {
-  private String description;
+  private final String description;
   private boolean completed;
   private int priority;
   private Date dueDate;

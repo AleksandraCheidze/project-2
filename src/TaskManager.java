@@ -2,7 +2,6 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -31,7 +30,7 @@ public class TaskManager {
         case 5 -> markTaskAsCompleted();
         case 6 -> showUncompletedTasks();
         case 7 -> deleteTask();
-        case 8 -> showTasksByDueDate();
+        case 8 -> DateSorter.showClosestDueDates(tasks);
         case 9 -> {
           saveTasks();
           System.out.println("Выход.");
@@ -208,17 +207,6 @@ public class TaskManager {
     tasks.sort(new PriorityComparator());
     System.out.println("Задачи отсортированы по приоритету:");
     showTasks();
-  }
-
-  void showTasksByDueDate() {
-    tasks.sort(Comparator.comparing(Task::getDueDate));
-    System.out.println("Задачи отсортированы по дате 'до которой надо выполнить':");
-    for (int i = 0; i < tasks.size(); i++) {
-      Task task = tasks.get(i);
-      SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-      String dueDateString = dateFormat.format(task.getDueDate());
-      System.out.println((i + 1) + ". " + task + " (до " + dueDateString + ")");
-    }
   }
 
   void saveTasks() {
