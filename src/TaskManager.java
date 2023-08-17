@@ -2,7 +2,6 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Scanner;
@@ -10,7 +9,7 @@ import java.util.Scanner;
 public class TaskManager {
 
   private static final String FILE_PATH = "tasks.txt";
-  private ArrayList<Task> tasks;
+  private final ArrayList<Task> tasks;
   private Scanner scanner;
 
   public TaskManager() {
@@ -151,10 +150,11 @@ public class TaskManager {
     if (selectedTaskIndex >= 0 && selectedTaskIndex < tasks.size()) {
       Task task = tasks.get(selectedTaskIndex);
       if (!task.isCompleted()) {
-        System.out.println("Введите приоритет для задачи:\n" +
-            "1 - \u001B[33mне важно\u001B[0m\n" +
-            "2 - \u001B[32mважно\u001B[0m\n" +
-            "3 - \u001B[31mповышенная важность\u001B[0m");
+        System.out.println("""
+            Введите приоритет для задачи:
+            1 - \u001B[33mне важно\u001B[0m
+            2 - \u001B[32mважно\u001B[0m
+            3 - \u001B[31mповышенная важность\u001B[0m""");
         int priority = getUserChoice();
         if (priority >= 1 && priority <= 3) {
           task.setPriority(priority);
@@ -205,13 +205,13 @@ public class TaskManager {
 
 
   void showTasksByPriority() {
-    Collections.sort(tasks, new PriorityComparator());
+    tasks.sort(new PriorityComparator());
     System.out.println("Задачи отсортированы по приоритету:");
     showTasks();
   }
 
   void showTasksByDueDate() {
-    Collections.sort(tasks, Comparator.comparing(Task::getDueDate));
+    tasks.sort(Comparator.comparing(Task::getDueDate));
     System.out.println("Задачи отсортированы по дате 'до которой надо выполнить':");
     for (int i = 0; i < tasks.size(); i++) {
       Task task = tasks.get(i);
@@ -251,13 +251,6 @@ public class TaskManager {
     return tasks;
   }
 
-  public void setTasks(ArrayList<Task> tasks) {
-    this.tasks = tasks;
-  }
-
-  public Scanner getScanner() {
-    return scanner;
-  }
 
   public void setScanner(Scanner scanner) {
     this.scanner = scanner;
