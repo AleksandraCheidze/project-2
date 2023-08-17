@@ -93,26 +93,31 @@ public class TaskManager {
   }
 
   void addTask() {
-    System.out.println("Введите задачу:");
-    String taskDescription = scanner.nextLine();
-    if (!taskDescription.isEmpty()) {
-      Task task = new Task(taskDescription);
+    while (true) {
+      System.out.println("Введите задачу:");
+      String taskDescription = scanner.nextLine();
 
-      System.out.println("Введите дату 'до которой надо выполнить' (формат: дд.мм.гггг):");
-      String dateString = scanner.nextLine();
-      SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-      try {
-        Date dueDate = dateFormat.parse(dateString);
-        task.setDueDate(dueDate);
-      } catch (ParseException e) {
-        System.out.println("Неверный формат даты.");
-        return;
+      if (!taskDescription.isEmpty()) {
+        Task task = new Task(taskDescription);
+
+        while (true) {
+          System.out.println("Введите дату 'до которой надо выполнить' (формат: дд.мм.гггг):");
+          String dateString = scanner.nextLine();
+          SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+          try {
+            Date dueDate = dateFormat.parse(dateString);
+            task.setDueDate(dueDate);
+            tasks.add(task);
+            System.out.println("Задача добавлена.");
+            return; // выходим из метода при успешном вводе даты
+          } catch (ParseException e) {
+            System.out.println("Неверный формат даты. Попробуйте снова.");
+          }
+        }
+      } else {
+        System.out.println("Пустая задача не может быть добавлена. Попробуйте снова.");
       }
-
-      tasks.add(task);
-      System.out.println("Задача добавлена.");
-    } else {
-      System.out.println("Пустая задача не может быть добавлена.");
     }
   }
 
@@ -265,4 +270,4 @@ public class TaskManager {
       return "Нет даты";
     }
   }
-  }
+}
