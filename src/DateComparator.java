@@ -10,11 +10,11 @@ public class DateComparator {
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
     System.out.println("Ближайшие даты выполнения задач:");
 
-    Date currentDate = new Date(); // Текущая дата и время
+    Date currentDate = new Date();
 
     for (int i = 0; i < tasks.size(); i++) {
       Task task = tasks.get(i);
-      if (task.getDueDate().after(currentDate)) { // Если дата выполнения после текущей даты
+      if (task.getDueDate().after(currentDate)) {
         String dueDateString = dateFormat.format(task.getDueDate());
         System.out.println((i + 1) + ". " + task + " (до " + dueDateString + ")");
       }
