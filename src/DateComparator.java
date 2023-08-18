@@ -3,7 +3,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class DateSorter {
+public class DateComparator {
   public static void showClosestDueDates(List<Task> tasks) {
     tasks.sort(Comparator.comparing(Task::getDueDate));
 
