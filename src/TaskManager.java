@@ -137,7 +137,6 @@ public class TaskManager {
     }
   }
 
-
   void markTaskAsCompleted(Scanner scanner) {
     showTasks(tasks);
     System.out.println("Введите номер задачи для отметки как выполненной:");
