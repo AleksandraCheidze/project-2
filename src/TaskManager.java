@@ -20,7 +20,7 @@ public class TaskManager {
     try {
       this.writer = new FileWriter(FILE_PATH);
     } catch (Exception e) {
-      System.out.println("Произошла ошибка при выполнении операции: " + e.getMessage());
+      System.out.println (e.getMessage());
     }
   }
 
