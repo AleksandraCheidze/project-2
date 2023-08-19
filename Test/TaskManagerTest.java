@@ -1,6 +1,4 @@
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,21 +12,21 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 public class TaskManagerTest {
-//    @Test
+
+//  @Test
 //  void testDeleteTask() {
-//    List<Task> tasks = new ArrayList<>();
-//    tasks.add(new Task("Задача 1"));
-//    tasks.add(new Task("Задача 2"));
-//    tasks.add(new Task("Задача 3"));
+//    TaskManager taskManager = new TaskManager();
+//    taskManager.getTasks().add(new Task("Задача 1"));
+//    taskManager.getTasks().add(new Task("Задача 2"));
+//    taskManager.getTasks().add(new Task("Задача 3"));
 //
 //    String input = "2\n";
 //    Scanner scanner = new Scanner(input);
-//    TaskManager taskManager = new TaskManager();
 //    taskManager.deleteTask(scanner);
 //
-//    assertEquals(2, tasks.size());
-//    assertEquals("Задача 1", tasks.get(0).getDescription());
-//    assertEquals("Задача 3", tasks.get(1).getDescription());
+//    assertEquals(2, taskManager.getTasks().size());
+//    assertEquals("Задача 1", taskManager.getTasks().get(0).getDescription());
+//    assertEquals("Задача 3", taskManager.getTasks().get(1).getDescription());
 //  }
 
   @Test
@@ -36,9 +34,7 @@ public class TaskManagerTest {
     TaskManager taskManager = new TaskManager();
     String input = "42";
     Scanner scanner = new Scanner(input);
-
     int choice = taskManager.getUserChoice(scanner);
-
     assertEquals(42, choice);
   }
 
@@ -57,25 +53,39 @@ public class TaskManagerTest {
 //  }
 //
 //
-//  @Test
-//  public void testAddTaskEmptyDescription() {
-//    TaskManager taskManager = new TaskManager();
-//    String input = "0\n";
-//    Scanner scanner = new Scanner(input);
-//    taskManager.addTask(scanner);
-//    assertTrue(taskManager.getTasks().isEmpty());
-//  }
-//
-//
+  @Test
+  public void testAddTaskEmptyDescription() {
+    String input = "\n";
+    InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+
+    InputStream originalSystemIn = System.in;
+
+    System.setIn(inputStream);
+
+    TaskManager taskManager = new TaskManager();
+
+    try {
+      Scanner scanner = new Scanner(System.in);
+      taskManager.addTask(scanner);
+
+      assertTrue(taskManager.getTasks().isEmpty());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      System.setIn(originalSystemIn);
+    }
+  }
+
 //  @Test
 //  public void testAddTaskInvalidDateFormat() {
-//    TaskManager taskManager = new TaskManager();
 //    String input = "Sample Task\ninvalid_date\n";
 //    Scanner scanner = new Scanner(input);
+//    TaskManager taskManager = new TaskManager();
 //    taskManager.addTask(scanner);
 //    assertEquals(0, taskManager.getTasks().size());
 //  }
-//
+
 //
 //  @Test
 //  public void testMarkTaskAsCompletedValidInput() {
@@ -103,7 +113,7 @@ public class TaskManagerTest {
     assertFalse(task1.isCompleted());
   }
 
-  //  @Test
+  //    @Test
 //  public void testMarkTasksByPriority() {
 //    TaskManager taskManager = new TaskManager();
 //    Task task1 = new Task("Task 1");
@@ -135,9 +145,9 @@ public class TaskManagerTest {
 //    Date dueDate = dateFormat.parse("10.08.2023");
 //    assertEquals(dueDate, loadedTask.getDueDate());
 //  }
-
-
-  //    @Test
+//
+//
+//      @Test
 //  public void testSaveTasks() throws IOException {
 //    TaskManager taskManager = new TaskManager();
 //    Task task1 = new Task("Task 1");
