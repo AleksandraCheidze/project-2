@@ -6,12 +6,21 @@ import java.util.*;
 public class TaskManager {
 
   private static final String FILE_PATH = "tasks.txt";
+  private static final int ADD_TASK_OPTION = 1;
+  private static final int SHOW_TASKS_OPTION = 2;
+  private static final int MARK_TASKS_BY_PRIORITY_OPTION = 3;
+  private static final int SHOW_TASKS_BY_PRIORITY_OPTION = 4;
+  private static final int MARK_TASK_AS_COMPLETED_OPTION = 5;
+  private static final int SHOW_UNCOMPLETED_TASKS_OPTION = 6;
+  private static final int DELETE_TASK_OPTION = 7;
+  private static final int SORT_TASKS_BY_DATE_OPTION = 8;
+  private static final int SAVE_AND_EXIT_OPTION = 9;
   private final ArrayList<Task> tasks;
   private final Scanner scanner;
   private FileWriter writer;
 
   public TaskManager() {
-    tasks = new ArrayList<>();
+    this.tasks = new ArrayList<>();
     this.scanner = new Scanner(System.in);
     loadTasks();
   }
@@ -40,15 +49,15 @@ public class TaskManager {
       int choice = getUserChoice(scanner);
 
       switch (choice) {
-        case 1 -> addTask(scanner);
-        case 2 -> showTasks(tasks);
-        case 3 -> markTasksByPriority(scanner);
-        case 4 -> showTasksByPriority();
-        case 5 -> markTaskAsCompleted(scanner);
-        case 6 -> showUncompletedTasks();
-        case 7 -> deleteTask(scanner);
-        case 8 -> DateComparator.showClosestDueDates(tasks);
-        case 9 -> {
+        case ADD_TASK_OPTION -> addTask(scanner);
+        case SHOW_TASKS_OPTION -> showTasks(tasks);
+        case MARK_TASKS_BY_PRIORITY_OPTION -> markTasksByPriority(scanner);
+        case SHOW_TASKS_BY_PRIORITY_OPTION -> showTasksByPriority();
+        case MARK_TASK_AS_COMPLETED_OPTION -> markTaskAsCompleted(scanner);
+        case SHOW_UNCOMPLETED_TASKS_OPTION -> showUncompletedTasks();
+        case DELETE_TASK_OPTION -> deleteTask(scanner);
+        case SORT_TASKS_BY_DATE_OPTION -> DateComparator.showClosestDueDates(tasks);
+        case SAVE_AND_EXIT_OPTION -> {
           initializeWriter();
           saveTasks(writer);
           closeWriter();
@@ -101,9 +110,12 @@ public class TaskManager {
 
   int getUserChoice(Scanner scanner) {
     try {
-      return Integer.parseInt(scanner.nextLine());
-    } catch (NumberFormatException e) {
-      System.err.println("Неверный ввод. Введите число.");
+      int choice = scanner.nextInt();
+      scanner.nextLine();
+      return choice;
+    } catch (InputMismatchException e) {
+      System.err.println("Неверный ввод. Введите число." + e.getMessage());
+      scanner.nextLine();
       return -1;
     }
   }
